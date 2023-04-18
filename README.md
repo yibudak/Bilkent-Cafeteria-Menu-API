@@ -52,6 +52,7 @@ Configuration file deployment
     
     [APP]
     API_KEY = YOUR_API_KEY
+    CHROMEDRIVER_PATH = /usr/bin/chromedriver
 ```
 
 And deploy the application with Gunicorn and reverse proxy...

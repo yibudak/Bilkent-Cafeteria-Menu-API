@@ -4,11 +4,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 from selenium.webdriver.common.by import By
-from backend import models
+from backend import models, conf
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(options=chrome_options)
+driver = webdriver.Chrome(options=chrome_options, executable_path=conf.app.CHROMEDRIVER_PATH)
 url = "http://kafemud.bilkent.edu.tr/monu_eng.html"
 
 menu_object = models.env["daily_menus"]
