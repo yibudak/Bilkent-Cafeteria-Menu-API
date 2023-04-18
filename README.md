@@ -6,6 +6,7 @@
 
 This project is designed to publish the weekly food list of Bilkent Cafeterias Management in a user-friendly way via a REST API.
 
+Important note: This project is not affiliated with Bilkent Cafeterias Management.
 
 ## Features
 
