@@ -47,7 +47,7 @@ class DailyMenus(BaseModel, db.Model):
         :return:
         """
         today = datetime.today()
-        start_of_current_week = today - timedelta(days=today.weekday())
+        start_of_current_week = (today - timedelta(days=today.weekday())).date()
         end_of_current_week = start_of_current_week + timedelta(days=6)
         menu = (
             self.query.filter(
