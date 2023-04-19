@@ -17,3 +17,7 @@ env = {
     "meals": meals.Meals(),
     "daily_menus": daily_menus.DailyMenus(),
 }
+
+# with app.app_context():
+#     db.drop_all()
+#     db.create_all()

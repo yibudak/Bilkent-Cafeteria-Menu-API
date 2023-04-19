@@ -8,6 +8,7 @@ meal_menu_rel = db.Table(
     "meal_menu_rel",
     db.Column("meal_id", db.Integer, db.ForeignKey("meals.id")),
     db.Column("menu_id", db.Integer, db.ForeignKey("daily_menus.id")),
+    db.Column("sequence", db.Integer),
 )
 
 
@@ -24,6 +25,7 @@ class DailyMenus(BaseModel, db.Model):
         secondary=meal_menu_rel,
         lazy="subquery",
         backref=db.backref("menu_ids", lazy=True),
+        order_by=meal_menu_rel.c.sequence,
     )
 
     def __repr__(self):

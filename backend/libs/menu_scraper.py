@@ -5,12 +5,16 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 from selenium.webdriver.common.by import By
 from backend import models, conf
+from backend.models.daily_menus import meal_menu_rel
+
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(options=chrome_options, executable_path=conf.app.CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(
+    options=chrome_options, executable_path=conf.app.CHROMEDRIVER_PATH
+)
 url = "http://kafemud.bilkent.edu.tr/monu_eng.html"
 
 menu_object = models.env["daily_menus"]
@@ -24,6 +28,15 @@ def get_meals(meals):
             splitted = single2.split(" / ")
             today_meals.append({"name": splitted[0], "english_name": splitted[1]})
     return [meals_model.create(meal) for meal in today_meals]
+
+
+def update_meals_sequence(menu_id, meals):
+    for idx, meal in enumerate(meals):
+        rel = models.db.session.query(meal_menu_rel).filter_by(
+            meal_id=meal.id, menu_id=menu_id
+        )
+        rel.update({"sequence": idx})
+    return True
 
 
 def parse_fixed_menu():
@@ -52,6 +65,7 @@ def parse_fixed_menu():
                 "meal_ids": today_meals,
             }
         )
+        update_meals_sequence(menu_object.id, today_meals)
 
 
 def parse_alternative_menu():
@@ -70,6 +84,7 @@ def parse_alternative_menu():
                 "meal_ids": today_meals,
             }
         )
+        update_meals_sequence(menu_object.id, today_meals)
 
 
 def scrap_menu():

@@ -12,23 +12,23 @@ USE `bilkentkafemud_db`;
 
 DROP TABLE IF EXISTS `daily_menus`;
 CREATE TABLE `daily_menus` (
-  `create_date` datetime NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `english_name` varchar(50) DEFAULT NULL,
   `nutrition_facts` text DEFAULT NULL,
   `menu_type` text DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 DROP TABLE IF EXISTS `meals`;
 CREATE TABLE `meals` (
-  `create_date` datetime NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text DEFAULT NULL,
   `english_name` text DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -37,6 +37,7 @@ DROP TABLE IF EXISTS `meal_menu_rel`;
 CREATE TABLE `meal_menu_rel` (
   `meal_id` int(11) DEFAULT NULL,
   `menu_id` int(11) DEFAULT NULL,
+  `sequence` int(11) DEFAULT NULL,
   KEY `meal_id` (`meal_id`),
   KEY `menu_id` (`menu_id`),
   CONSTRAINT `meal_menu_rel_ibfk_1` FOREIGN KEY (`meal_id`) REFERENCES `meals` (`id`),
@@ -44,4 +45,4 @@ CREATE TABLE `meal_menu_rel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- 2023-04-17 23:02:18
+-- 2023-04-19 11:59:46
