@@ -29,7 +29,7 @@ class DailyMenus(BaseModel, db.Model):
     def __repr__(self):
         return "<Menu %s (%s)>" % (self.date, self.menu_type)
 
-    def create(self, vals, commit=True):
+    def create_or_update(self, vals, commit=True):
         """
         Check if the menu is already in the database.
         :return:
@@ -39,6 +39,10 @@ class DailyMenus(BaseModel, db.Model):
         ).first()
         if not menu:
             menu = super().create(vals, commit)
+        else:
+            menu.nutrition_facts = vals["nutrition_facts"]
+            menu.meal_ids = vals["meal_ids"]
+            db.session.commit()
         return menu
 
     def get_weekly_menu(self):
