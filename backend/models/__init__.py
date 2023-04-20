@@ -3,21 +3,22 @@
 from backend import app, conf
 from flask_sqlalchemy import SQLAlchemy
 
-
 app.config["SQLALCHEMY_DATABASE_URI"] = conf.db.SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 from . import meals
 from . import daily_menus
+from . import nutrition_facts
 
 # Register models to app
 
 env = {
     "meals": meals.Meals(),
     "daily_menus": daily_menus.DailyMenus(),
+    "nutrition_facts": nutrition_facts.NutritionFacts(),
 }
 
-# with app.app_context():
-#     db.drop_all()
-#     db.create_all()
+with app.app_context():
+    db.drop_all()
+    db.create_all()

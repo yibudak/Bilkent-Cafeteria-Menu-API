@@ -15,7 +15,6 @@ CREATE TABLE `daily_menus` (
   `date` date DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `english_name` varchar(50) DEFAULT NULL,
-  `nutrition_facts` text DEFAULT NULL,
   `menu_type` text DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_date` datetime NOT NULL,
@@ -45,4 +44,19 @@ CREATE TABLE `meal_menu_rel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- 2023-04-19 11:59:46
+DROP TABLE IF EXISTS `nutrition_facts`;
+CREATE TABLE `nutrition_facts` (
+  `energy` varchar(50) DEFAULT NULL,
+  `fat` varchar(50) DEFAULT NULL,
+  `carbohydrate` varchar(50) DEFAULT NULL,
+  `protein` varchar(50) DEFAULT NULL,
+  `menu_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `menu_id` (`menu_id`),
+  CONSTRAINT `nutrition_facts_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `daily_menus` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- 2023-04-20 13:19:18

@@ -18,7 +18,7 @@ class DailyMenus(BaseModel, db.Model):
     date = db.Column(db.Date())
     name = db.Column(db.String(50))
     english_name = db.Column(db.String(50))
-    nutrition_facts = db.Column(db.Text())
+    nutrition_facts = db.relationship('NutritionFacts', backref='nutrition_facts', lazy=True)
     menu_type = db.Column(db.Text())
     meal_ids = db.relationship(
         "Meals",
@@ -42,7 +42,6 @@ class DailyMenus(BaseModel, db.Model):
         if not menu:
             menu = super().create(vals, commit)
         else:
-            menu.nutrition_facts = vals["nutrition_facts"]
             menu.meal_ids = vals["meal_ids"]
             db.session.commit()
         return menu

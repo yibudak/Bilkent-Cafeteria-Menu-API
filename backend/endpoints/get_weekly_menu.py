@@ -24,7 +24,6 @@ def get_weekly_menu():
                                 "id": menu.id,
                                 "name": menu.name,
                                 "english_name": menu.english_name,
-                                "nutrition_facts": menu.nutrition_facts,
                                 "courses": [
                                     {
                                         "id": meal.id,
@@ -36,6 +35,23 @@ def get_weekly_menu():
                             }
                         }
                     )
+                    if menu.menu_type != "alternative":
+                        """
+                        Since alternative menus don't have nutrition facts,
+                        we don't need to add them to the response.
+                        """
+                        nutrition_facts = menu.nutrition_facts[0]
+                        data[str_date][menu.menu_type].update(
+                            {
+                                "nutrition_facts": {
+                                    "energy": nutrition_facts.energy,
+                                    "fat": nutrition_facts.fat,
+                                    "carbohydrate": nutrition_facts.carbohydrate,
+                                    "protein": nutrition_facts.protein,
+                                },
+                            }
+                        )
+
             response = {"status": "success", "data": data}
 
     return jsonify(response)

@@ -4,21 +4,30 @@ from . import db
 from .base import BaseModel
 
 
-class Meals(BaseModel, db.Model):
-    __tablename__ = "meals"
+class NutritionFacts(BaseModel, db.Model):
+    __tablename__ = "nutrition_facts"
 
-    name = db.Column(db.Text())
-    english_name = db.Column(db.Text())
+    energy = db.Column(db.String(50))
+    fat = db.Column(db.String(50))
+    carbohydrate = db.Column(db.String(50))
+    protein = db.Column(db.String(50))
+    menu_id = db.Column(db.Integer, db.ForeignKey("daily_menus.id"), nullable=False)
 
     def __repr__(self):
-        return "<Meal: %r>" % self.english_name
+        return "<NutritionFact: %r>" % self.english_name
 
-    def create(self, vals, commit=True):
+    def create_or_update(self, vals, commit=True):
         """
-        Check if the meal is already in the database.
+        Check if the nutrition fact is already in the database.
         :return:
         """
-        meal = self.query.filter_by(name=vals["name"]).first()
-        if not meal:
-            meal = super().create(vals, commit)
-        return meal
+        menu = self.query.filter_by(menu_id=vals["menu_id"]).first()
+        if not menu:
+            menu = super().create(vals, commit)
+        else:
+            menu.energy = vals["energy"]
+            menu.fat = vals["fat"]
+            menu.carbohydrate = vals["carbohydrate"]
+            menu.protein = vals["protein"]
+            db.session.commit()
+        return menu
