@@ -59,4 +59,24 @@ CREATE TABLE `nutrition_facts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- 2023-04-20 13:19:18
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `uid` varchar(16) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+DROP TABLE IF EXISTS `user_meal_rel`;
+CREATE TABLE `user_meal_rel` (
+  `meal_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  KEY `meal_id` (`meal_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `user_meal_rel_ibfk_1` FOREIGN KEY (`meal_id`) REFERENCES `meals` (`id`),
+  CONSTRAINT `user_meal_rel_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- 2023-04-24 18:34:39

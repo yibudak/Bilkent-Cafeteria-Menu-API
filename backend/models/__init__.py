@@ -10,6 +10,7 @@ db = SQLAlchemy(app)
 from . import meals
 from . import daily_menus
 from . import nutrition_facts
+from . import users
 
 # Register models to app
 
@@ -17,8 +18,9 @@ env = {
     "meals": meals.Meals(),
     "daily_menus": daily_menus.DailyMenus(),
     "nutrition_facts": nutrition_facts.NutritionFacts(),
+    "users": users.Users(),
 }
 
-# with app.app_context():
-#     db.drop_all()
-#     db.create_all()
+with app.app_context():
+    db.drop_all()
+    db.create_all()

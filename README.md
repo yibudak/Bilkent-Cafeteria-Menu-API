@@ -80,6 +80,18 @@ And deploy the application with Gunicorn and reverse proxy...
 | :-------- | :------- | :------------------------- |
 | `apiKey` | `string` | **Required**. Your API key |
 
+#### Get the favorite meals
+
+```http
+  POST /postFavorite JSON
+```
+
+| Parameter       | Type     | Description                   |
+|:----------------|:---------|:------------------------------|
+| `apiKey`        | `string` | **Required**. Your API key    |
+| `userId`        | `string` | **Required**. Unique User ID  |
+| `favoriteMeals` | `array`  | **Required**. Favorited Meals |
+
 ## Database structure
 
 ![Database structure](./assets/database_diagram.png)

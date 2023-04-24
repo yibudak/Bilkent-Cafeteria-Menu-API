@@ -17,12 +17,60 @@ class BaseModel(object):
     create_date = PriorityColumn(db.DateTime, nullable=False)
 
     @classmethod
-    def search(cls, id):
+    def browse(cls, id):
         if any(
             (isinstance(id, str) and id.isdigit(), isinstance(id, (int, float))),
         ):
             return cls.query.get(int(id))
         return None
+
+    @classmethod
+    def search(cls, domain):
+        query = cls.query
+        ops = {
+            "in": lambda col, val: col.in_(val),
+            "ilike": lambda col, val: col.ilike(val),
+            "=": lambda col, val: col == val,
+            "!=": lambda col, val: col != val,
+            "<": lambda col, val: col < val,
+            ">": lambda col, val: col > val,
+            "<=": lambda col, val: col <= val,
+            ">=": lambda col, val: col >= val,
+            "like": lambda col, val: col.like(val),
+            "not like": lambda col, val: ~col.like(val),
+            "contains": lambda col, val: col.contains(val),
+            "not contains": lambda col, val: ~col.contains(val),
+            # add additional operators here as needed
+        }
+        stack = []
+        for f in domain:
+            if f == "|":
+                right = stack.pop()
+                left = stack.pop()
+                query = query.filter(cls._combine_domain(left, right, "or"))
+                stack.append(None)
+            else:
+                stack.append(cls._create_filter(cls, f, ops))
+        if len(stack) == 1 and stack[0] is not None:
+            query = query.filter(stack[0])
+        return query.all()
+
+    @staticmethod
+    def _create_filter(model, f, ops):
+        if f[1] in ops:
+            col = model.__dict__[f[0]]
+            return ops[f[1]](col, f[2])
+        else:
+            return None
+
+    @staticmethod
+    def _combine_domain(left, right, op):
+        if left is None:
+            return right
+        elif right is None:
+            return left
+        else:
+            return left.op(op)(right)
 
     @classmethod
     def create(cls, vals, commit=True):
