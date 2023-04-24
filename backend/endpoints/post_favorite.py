@@ -1,6 +1,7 @@
 # Copyright 2023 Yiğit Budak (https://github.com/yibudak)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from backend import app, conf, models
+from backend.models import db
 from flask import jsonify, request
 from backend.libs import http_methods
 from flask_expects_json import expects_json
@@ -27,7 +28,7 @@ def post_favorite():
     if request.json["apiKey"] == conf.app.API_KEY:
         meals = meals_model.search([("id", "in", request.json["favoriteMeals"])])
         user = users_model.create({"uid": request.json["userId"]})
-        user.favorite_meals = meals
+        user.set_favorite_meals(meals)
         response = {"status": "success"}
 
     return jsonify(response)

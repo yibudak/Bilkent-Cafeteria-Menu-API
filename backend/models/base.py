@@ -26,6 +26,9 @@ class BaseModel(object):
 
     @classmethod
     def search(cls, domain):
+        """
+        Odoo ORM search method for SQLAlchemy
+        """
         query = cls.query
         ops = {
             "in": lambda col, val: col.in_(val),
@@ -57,6 +60,9 @@ class BaseModel(object):
 
     @staticmethod
     def _create_filter(model, f, ops):
+        """
+        Create a SQLAlchemy filter from an Odoo domain tuple
+        """
         if f[1] in ops:
             col = model.__dict__[f[0]]
             return ops[f[1]](col, f[2])
@@ -65,6 +71,9 @@ class BaseModel(object):
 
     @staticmethod
     def _combine_domain(left, right, op):
+        """
+        Combine two SQLAlchemy filters with the given operator
+        """
         if left is None:
             return right
         elif right is None:
@@ -90,6 +99,15 @@ class BaseModel(object):
         if commit:
             db.session.commit()
         return instances
+
+    @classmethod
+    def write(cls, vals, commit=True):
+        instance = cls
+        for attr, value in vals.items():
+            setattr(instance, attr, value)
+        if commit:
+            db.session.commit()
+        return instance
 
     def unlink(self, commit=True):
         db.session.delete(self)

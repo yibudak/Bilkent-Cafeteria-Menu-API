@@ -33,3 +33,15 @@ class Users(BaseModel, db.Model):
         if not user:
             user = super().create(vals, commit)
         return user
+
+    def set_favorite_meals(self, meals, commit=True):
+        """
+        Set favorite meals for the user.
+        :param meal_ids:
+        :param commit:
+        :return:
+        """
+        self.favorite_meal_ids = meals
+        if commit:
+            db.session.commit()
+        return self
