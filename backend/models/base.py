@@ -25,7 +25,7 @@ class BaseModel(object):
         return None
 
     @classmethod
-    def search(cls, domain):
+    def search(cls, domain, limit=None):
         """
         Odoo ORM search method for SQLAlchemy
         """
@@ -61,8 +61,10 @@ class BaseModel(object):
             for f in stack[1:]:
                 group_filter &= f
             query = query.filter(group_filter)
-        else:
+        elif domain and not stack:
             query = query.filter(None)
+        if limit:
+            query = query.limit(limit)
         return query.all()
 
     @staticmethod
