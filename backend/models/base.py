@@ -52,10 +52,17 @@ class BaseModel(object):
                 left = stack.pop()
                 query = query.filter(cls._combine_domain(left, right, "or"))
                 stack.append(None)
+            elif f == "&":
+                stack.append(cls._create_filter(cls, f, ops))
             else:
                 stack.append(cls._create_filter(cls, f, ops))
-        if len(stack) == 1 and stack[0] is not None:
-            query = query.filter(stack[0])
+        if stack:
+            group_filter = stack[0]
+            for f in stack[1:]:
+                group_filter &= f
+            query = query.filter(group_filter)
+        else:
+            query = query.filter(None)
         return query.all()
 
     @staticmethod
