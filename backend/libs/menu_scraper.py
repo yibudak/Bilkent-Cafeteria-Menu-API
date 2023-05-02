@@ -8,15 +8,6 @@ from backend import models, conf
 from backend.models.daily_menus import meal_menu_rel
 
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(
-    options=chrome_options, executable_path=conf.app.CHROMEDRIVER_PATH
-)
-url = "http://kafemud.bilkent.edu.tr/monu_eng.html"
-
 menu_object = models.env["daily_menus"]
 meals_model = models.env["meals"]
 nutrition_facts_model = models.env["nutrition_facts"]
@@ -47,7 +38,7 @@ def update_meals_sequence(menu, meals):
     return True
 
 
-def parse_fixed_menu():
+def parse_fixed_menu(driver):
     """
     Parse the fixed menu.
     """
@@ -88,7 +79,7 @@ def parse_fixed_menu():
         update_meals_sequence(created_menu, today_meals)
 
 
-def parse_alternative_menu():
+def parse_alternative_menu(driver):
     """
     Alternative menus are not in the same table as fixed menus. So we need to
     parse them separately also alternative menus are not in the same format
@@ -113,7 +104,15 @@ def parse_alternative_menu():
 
 
 def scrap_menu():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(
+        options=chrome_options, executable_path=conf.app.CHROMEDRIVER_PATH
+    )
+    url = "http://kafemud.bilkent.edu.tr/monu_eng.html"
     driver.get(url)
-    parse_fixed_menu()
-    parse_alternative_menu()
+    parse_fixed_menu(driver)
+    parse_alternative_menu(driver)
     driver.quit()
